@@ -16,6 +16,7 @@ const dividido = document.getElementById('/')
 const punto = document.getElementById('.')
 const igual = document.getElementById('=')
 const cero = document.getElementById('0')
+const clear = document.getElementById('clr')
 
 var operador
 var numeroTemporal = 1
@@ -23,6 +24,7 @@ var numeroTemporal = 1
 class calculadora {
     constructor() {
         this.inicio = this.inicio.bind(this)
+        this.identificarBoton = this.identificarBoton.bind(this)
         this.inicio()
         this.leerTeclas()
 
@@ -30,13 +32,14 @@ class calculadora {
     }
 
     inicio() {
-        this.numeros = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        this.botones = { uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, cero, mas, menos, por, dividido, punto, igual }
+        this.numeros = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '/', '*', '-', '+', 'Enter', '.']
+        this.botones = { uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, cero, mas, menos, por, dividido, punto, igual, clear }
 
     }
 
     leerTeclas() {
-        document.addEventListener('keydown', this.identificarTecla)
+        document.addEventListener("keydown", this.identificarTecla)
+
         this.botones.uno.addEventListener("click", this.identificarBoton)
         this.botones.dos.addEventListener("click", this.identificarBoton)
         this.botones.tres.addEventListener("click", this.identificarBoton)
@@ -53,61 +56,92 @@ class calculadora {
         this.botones.menos.addEventListener("click", this.identificarBoton)
         this.botones.punto.addEventListener("click", this.identificarBoton)
         this.botones.igual.addEventListener("click", this.identificarBoton)
+        this.botones.clear.addEventListener("click", borrarContenido)
 
     }
-
-    identificarTecla(e) {
-
-    }
-
 
 
     identificarBoton(e) {
-        let boton = e.target.dataset.numero
-        switch (boton) {
-            case '+':
-                {
-                    operador = '+'
-                    numeroTemporal = guardarValor()
-                    borrarContenido()
-                    break
-                }
-            case '-':
-                {
-                    operador = '-'
-                    numeroTemporal = guardarValor()
-                    borrarContenido()
-                    break
-                }
-            case '/':
-                {
-                    operador = '/'
-                    numeroTemporal = guardarValor()
-                    borrarContenido()
-                    break
-                }
-            case '*':
-                {
-                    operador = '*'
-                    numeroTemporal = guardarValor()
-                    borrarContenido()
-                    break
-                }
-            case '=':
-                {
-                    let num2 = guardarValor()
-                    borrarContenido()
-                    mostrarResultado(numeroTemporal, num2, operador)
-                    break
-                }
-            default:
-                total.innerHTML = total.innerHTML + (boton)
-        }
-
+        calcular(e.target.dataset.numero)
+    }
+    identificarTecla(e) {
+        calcular(e.key)
 
     }
 
+
 }
+
+
+
+function calcular(boton) {
+    switch (boton) {
+        case '+':
+            {
+                operador = '+'
+                numeroTemporal = guardarValor()
+                borrarContenido()
+                total.innerHTML = '+'
+                setTimeout(borrarContenido, 300)
+                break
+            }
+        case '-':
+            {
+                operador = '-'
+                numeroTemporal = guardarValor()
+                borrarContenido()
+                total.innerHTML = '-'
+                setTimeout(borrarContenido, 300)
+                break
+            }
+        case '/':
+            {
+                operador = '/'
+                numeroTemporal = guardarValor()
+                borrarContenido()
+                total.innerHTML = '/'
+                setTimeout(borrarContenido, 300)
+                break
+            }
+        case '*':
+            {
+                operador = '*'
+                numeroTemporal = guardarValor()
+                borrarContenido()
+                total.innerHTML = 'x'
+                setTimeout(borrarContenido, 300)
+                break
+            }
+        case '=':
+            {
+                let num2 = guardarValor()
+                borrarContenido()
+                mostrarResultado(numeroTemporal, num2, operador)
+                break
+            }
+        case 'Enter':
+            {
+                let num2 = guardarValor()
+                borrarContenido()
+                mostrarResultado(numeroTemporal, num2, operador)
+                break
+            }
+        case 'Backspace':
+            {
+                borrarContenido()
+                break
+            }
+
+    }
+
+    if (boton >= 0 && boton <= 9) {
+        total.innerHTML = total.innerHTML + (boton)
+    }
+
+
+}
+
+
 
 function mostrarResultado(a, b) {
     switch (operador) {
